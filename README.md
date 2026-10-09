@@ -4,13 +4,14 @@
 
 A beginner-level API testing mini project using the DummyJSON API to practice authentication, bearer token handling, GET and POST requests, and dynamic data extraction.
 
-## Tools Used
+## Technologies Used
 
-* Postman
-* REST API
-* JSON
-* JavaScript (Postman scripts)
-* GitHub
+* **API Testing Tool:** Postman
+* **Language:** JavaScript (Postman test scripts)
+* **Data Format:** JSON
+* **API:** DummyJSON
+* **Version Control:** GitHub
+
 
 ## Concepts Practiced
 
