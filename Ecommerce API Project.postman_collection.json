@@ -1,0 +1,142 @@
+{
+  "info": {
+    "_postman_id": "60600119-8d7e-4948-b293-919fa04216fb",
+    "name": "Ecom API Project",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58556352"
+  },
+  "item": [
+    {
+      "name": "Login API",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const jsonData = pm.response.json();\r\n\r\npm.test('Status code is 200', () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test('Response has accessToken', () => {\r\n    pm.expect(jsonData).to.have.property('accessToken');\r\n    pm.expect(jsonData.accessToken).to.be.a('string').and.not.empty;\r\n});\r\n\r\npm.test('Response has refreshToken', () => {\r\n    pm.expect(jsonData).to.have.property('refreshToken');\r\n    pm.expect(jsonData.refreshToken).to.be.a('string').and.not.empty;\r\n});\r\n\r\npm.test('accessToken is a valid JWT format', () => {\r\n    const parts = jsonData.accessToken.split('.');\r\n    pm.expect(parts.length).to.equal(3);\r\n});\r\n\r\npm.test('refreshToken is a valid JWT format', () => {\r\n    const parts = jsonData.refreshToken.split('.');\r\n    pm.expect(parts.length).to.equal(3);\r\n});\r\n\r\npm.test('accessToken payload contains required fields', () => {\r\n    const payload = JSON.parse(atob(jsonData.accessToken.split('.')[1]));\r\n    pm.expect(payload).to.have.property('id');\r\n    pm.expect(payload).to.have.property('username');\r\n    pm.expect(payload).to.have.property('exp');\r\n});\r\n\r\npm.test('accessToken is not expired', () => {\r\n    const payload = JSON.parse(atob(jsonData.accessToken.split('.')[1]));\r\n    const currentTime = Math.floor(Date.now() / 1000);\r\n    pm.expect(payload.exp).to.be.above(currentTime);\r\n});\r\n\r\n// Save tokens to environment\r\npm.environment.set('accessToken', jsonData.accessToken);\r\npm.environment.set('refreshToken', jsonData.refreshToken);\r\n\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"emilys\",\r\n    \"password\": \"emilyspass\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User Profile",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/me",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nlet jsonData = pm.response.json();\r\n\r\npm.environment.set(\"product_id\", jsonData.products[0].id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/products",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Single Product",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/product/{{product_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "product",
+            "{{product_id}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
