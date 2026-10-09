@@ -122,16 +122,27 @@
     },
     {
       "name": "Get Single Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Product ID matches requested ID\", () => {\r\n    const data = pm.response.json();\r\n    pm.expect(String(data.id)).to.eql(\r\n        String(pm.environment.get(\"product_id\"))\r\n    );\r\n});"
+            ]
+          }
+        }
+      ],
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/product/{{product_id}}",
+          "raw": "{{base_url}}/products/{{product_id}}",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "product",
+            "products",
             "{{product_id}}"
           ]
         }
