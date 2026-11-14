@@ -25,6 +25,28 @@ The collection contains four requests:
 
 The base URL is configured through the `base_url` environment variable: `https://dummyjson.com`.
 
+## Project Diagrams
+
+The following diagrams provide a visual overview of the request sequence, authentication handling, and the Postman test-script checks implemented in this collection.
+
+### 1. Authentication Flow
+
+Shows how the Login API returns tokens, how the collection stores them in environment variables, and how the access token is used for the authenticated user-profile request.
+
+![E-commerce API Authentication Flow](screenshots/authentication-flow.png)
+
+### 2. API Testing Workflow
+
+Shows the sequence of the four API requests and how environment variables pass token and product-ID data between requests.
+
+![E-commerce API Testing Workflow](screenshots/api-workflow.png)
+
+### 3. Test Script Validations
+
+Summarizes the response checks and data validations implemented in the Postman JavaScript test scripts.
+
+![Postman Test Script Validations](screenshots/test-validations.png)
+
 ## Authentication and Request Flow
 
 The collection follows this sequence:
