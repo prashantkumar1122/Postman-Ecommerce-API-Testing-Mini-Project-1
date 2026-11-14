@@ -1,114 +1,76 @@
 # E-commerce API Testing using Postman
 
-A beginner-level REST API testing project using the [DummyJSON API](https://dummyjson.com). This project demonstrates API authentication, Bearer token handling, environment variables, dynamic data extraction, and response validation using Postman.
+A beginner-level REST API testing project using the [DummyJSON API](https://dummyjson.com). It covers authentication, Bearer tokens, environment variables, dynamic data, and response validation.
 
-## Project Overview
+## Project Details
 
-The purpose of this project is to practise testing REST API endpoints and understand how requests, responses, authentication tokens, and Postman test scripts work together.
+- **API:** DummyJSON
+- **Tool:** Postman
+- **Scripting:** JavaScript
+- **Format:** JSON
 
-**API under test:** DummyJSON  
-**Tool:** Postman  
-**Scripting:** JavaScript (Postman test scripts)  
-**Response format:** JSON  
-**Version control:** GitHub
+## Requests Covered
 
-## Scope of Testing
+| Request | Method | Endpoint |
+|---|---|---|
+| Login API | POST | `/auth/login` |
+| Get User Profile | GET | `/auth/me` |
+| Get Products | GET | `/products` |
+| Get Single Product | GET | `/products/{{product_id}}` |
 
-The collection contains four requests:
-
-| Request | Method | Endpoint | Purpose |
-|---|---|---|---|
-| Login API | POST | `/auth/login` | Authenticate with a demo account and receive access and refresh tokens |
-| Get User Profile | GET | `/auth/me` | Request the authenticated user's profile using a Bearer access token |
-| Get Products | GET | `/products` | Retrieve the product list and save the first product's ID |
-| Get Single Product | GET | `/products/{{product_id}}` | Retrieve one product using the ID saved by the previous request |
-
-The base URL is configured through the `base_url` environment variable: `https://dummyjson.com`.
+Base URL: `https://dummyjson.com` (stored in the `base_url` environment variable).
 
 ## Project Diagrams
 
-The following diagrams provide a visual overview of the request sequence, authentication handling, and the Postman test-script checks implemented in this collection.
-
 ### 1. Authentication Flow
+Login, token storage, and the authenticated profile request.
 
-Shows how the Login API returns tokens, how the collection stores them in environment variables, and how the access token is used for the authenticated user-profile request.
-
-![E-commerce API Authentication Flow](screenshots/authentication-flow.png)
+![Authentication Flow](screenshots/authentication-flow.png)
 
 ### 2. API Testing Workflow
+The four requests and the data passed between them.
 
-Shows the sequence of the four API requests and how environment variables pass token and product-ID data between requests.
-
-![E-commerce API Testing Workflow](screenshots/api-workflow.png)
+![API Testing Workflow](screenshots/api-workflow.png)
 
 ### 3. Test Script Validations
+The main response and data checks in the Postman scripts.
 
-Summarizes the response checks and data validations implemented in the Postman JavaScript test scripts.
+![Test Script Validations](screenshots/test-validations.png)
 
-![Postman Test Script Validations](screenshots/test-validations.png)
+## Test Flow
 
-## Authentication and Request Flow
+1. Login and validate the response and tokens.
+2. Save access and refresh tokens as environment variables.
+3. Use the access token for the profile request.
+4. Fetch products and save the first product ID.
+5. Use that ID to retrieve and validate a single product.
 
-The collection follows this sequence:
+**Note:** The refresh token is stored but no refresh-token request is implemented. JWT checks inspect structure and selected payload fields; they do not verify the signature.
 
-1. **Login:** Send a POST request to `/auth/login` with the DummyJSON demo login details in the request body.
-2. **Validate the login response:** The test script checks for HTTP 200, verifies that access and refresh tokens are present and non-empty, checks their three-part JWT structure, and checks selected access-token payload fields and expiry.
-3. **Save tokens:** The script stores `accessToken` and `refreshToken` in the selected Postman environment.
-4. **Send an authenticated request:** The Get User Profile request uses `{{accessToken}}` as its Bearer token.
-5. **Fetch products:** The Get Products request saves the first product's ID as `product_id`.
-6. **Reuse dynamic data:** Get Single Product uses `{{product_id}}` in its URL and checks that the returned product ID matches the requested ID.
+## Tools and Concepts
 
-**Note:** The collection stores a refresh token, but it does not currently contain a refresh-token request or an automated token-refresh flow. The JWT checks inspect token structure and selected payload fields; they do not cryptographically verify the token signature.
+- Postman collections and environments
+- REST API testing with GET and POST
+- JSON request and response validation
+- Bearer-token authentication
+- JavaScript test scripts
+- Dynamic data extraction and reuse
 
-## Test Scripts and Validations
+## How to Run
 
-Postman JavaScript test scripts are used to validate responses and share data between requests.
+1. Import `Ecommerce API Project.postman_collection.json` into Postman.
+2. Create an environment and set `base_url` to `https://dummyjson.com`.
+3. Send Login API first, then Get User Profile.
+4. Send Get Products, followed by Get Single Product.
+5. Review each response and its **Test Results** tab.
 
-- **Login API:** Checks status code, access/refresh token presence, JWT structure, selected access-token payload fields (`id`, `username`, `exp`), and that the access token has not expired. Saves both tokens as environment variables.
-- **Get User Profile:** Checks that the response status is HTTP 200.
-- **Get Products:** Checks HTTP 200 and saves the first product ID to `product_id`.
-- **Get Single Product:** Checks HTTP 200 and verifies that the returned product ID matches the saved ID.
+Use valid DummyJSON demo credentials for the login request.
 
-## Tools and Concepts Practised
+## Current Limitations
 
-- Postman collections and environment variables
-- REST API requests using POST and GET
-- JSON request and response bodies
-- Authentication using Bearer tokens
-- Access-token and refresh-token extraction and storage
-- JavaScript test scripts and response assertions
-- Dynamic data extraction and reuse across requests
-- HTTP status-code validation
-
-## How to Run the Collection
-
-1. Clone or download this repository.
-2. Open Postman and import `Ecommerce API Project.postman_collection.json`.
-3. Create and select a Postman environment.
-4. Add an environment variable named `base_url` with the value `https://dummyjson.com`.
-5. Open the Login API request and use valid demo credentials supported by DummyJSON. The collection currently includes sample demo credentials in its request body; these are not personal credentials.
-6. Send **Login API** first so the test script can save the tokens.
-7. Send **Get User Profile** to use the saved access token.
-8. Send **Get Products** to save a product ID, then send **Get Single Product**.
-9. Review the response and the **Test Results** tab for each request.
-
-Run the requests in the order shown above so the required environment variables are available.
-
-## Repository File
-
-- [Ecommerce API Project.postman_collection.json](Ecommerce%20API%20Project.postman_collection.json) — importable Postman collection containing the four requests and their test scripts.
-
-## API Reference
-
-- [DummyJSON documentation](https://dummyjson.com/docs)
-
-## Current Project Limitations
-
-- The collection currently focuses on successful request flows; negative scenarios such as invalid credentials, missing/invalid tokens, and invalid product IDs are not included.
-- The refresh token is captured and stored, but a refresh-token request is not implemented.
-- The Get User Profile request currently validates the HTTP status code only.
-
-These are possible future enhancements, not features claimed as completed.
+- Negative scenarios are not included yet.
+- No automated token-refresh flow.
+- The profile request currently checks the HTTP status code only.
 
 ## Author
 
